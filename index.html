@@ -162,21 +162,20 @@ const MODEL_URL = './ESTRUCTURA_EDEN_ROCK_FINAL.glb';
 // "Cerchas Hierro" anidado dentro de "Fachadas Ext/Int": como Cerchas Hierro
 // es el ancestro más próximo, esas mallas van al grupo "hierro" y no a "fachadas".
 const GROUP_DEFS = [
-  { id: 'steel',     label: 'Steel Framing (Estructura)',   color: '#2E5395', test: n => /^wall\d+$/i.test(n) },
-  { id: 'hierro',    label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) },
-  { id: 'techo',     label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
-  { id: 'pergola',   label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
-  { id: 'fachadas',  label: 'Fachadas (Terminación Ext/Int)', color: '#B65C9C', test: n => /fachadas ext/i.test(n) },
-  { id: 'platea',    label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground$/i.test(n), alwaysOn: true },
-  { id: 'aberturas', label: 'Aberturas (puertas y ventanas)', color: '#3FA7A0', test: n => /^aberturas$/i.test(n) },
+  { id: 'steel',       label: 'Steel Framing (Estructura)',   color: '#2E5395', test: n => /^wall\d+$/i.test(n) },
+  { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) },
+  { id: 'techo',       label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
+  { id: 'pergola',     label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
+  { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas ext/i.test(n) || /^aberturas$/i.test(n) },
+  { id: 'platea',      label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground$/i.test(n), alwaysOn: true },
 ];
 // Par mutuamente excluyente: mostrar uno oculta el otro automáticamente
-const EXCLUSIVE_PAIR = ['fachadas', 'steel'];
+const EXCLUSIVE_PAIR = ['terminacion', 'steel'];
 
 // Estado inicial (visible / oculto) por capa
 const INITIAL_STATE = {
-  platea: true, fachadas: true, steel: false,
-  hierro: false, techo: true, pergola: true, aberturas: true,
+  platea: true, terminacion: true, steel: false,
+  hierro: false, techo: true, pergola: true,
 };
 
 // ============== ESCENA THREE.JS ==============
@@ -366,7 +365,7 @@ function buildLayerPanel() {
   const blockPair = document.createElement('div');
   blockPair.className = 'layer-block';
   blockPair.innerHTML = `<div class="layer-block-title">Terminación vs. Estructura</div>`;
-  blockPair.appendChild(makeRow('fachadas'));
+  blockPair.appendChild(makeRow('terminacion'));
   blockPair.appendChild(makeRow('steel'));
   const note = document.createElement('div');
   note.className = 'exclusive-note';
@@ -378,7 +377,7 @@ function buildLayerPanel() {
   const blockOpc = document.createElement('div');
   blockOpc.className = 'layer-block';
   blockOpc.innerHTML = `<div class="layer-block-title">Pestañas opcionales</div>`;
-  ['hierro', 'techo', 'pergola', 'aberturas'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
+  ['hierro', 'techo', 'pergola'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
   list.appendChild(blockOpc);
 
   function makeRow(gid) {
