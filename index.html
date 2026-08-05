@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eden Rock · Visor de Etapas Constructivas</title>
+<style>
+  :root{
+    --navy:#1F3864; --navy-light:#2E5395; --paper:#F4F6F9; --line:#E2E0D8;
+    --accent:#D97757; --texto:#20242C; --texto-sec:#6B7280; --fondo:#F7F8FA;
+    --borde:#E4E7EC;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--texto);}
+
+  header{
+    height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 18px;background:var(--navy);color:#fff;flex-shrink:0;
+  }
+  header h1{font-size:15px;margin:0;font-weight:700;}
+  header .sub{font-size:11px;opacity:.75;margin-top:1px;}
+  header .brand{font-size:11px;font-weight:700;letter-spacing:.04em;opacity:.85;}
+
+  main{display:flex;height:calc(100% - 56px);}
+
+  #viewer-wrap{flex:1;position:relative;background:#dde3ea;}
+  #canvas-container{position:absolute;inset:0;}
+  #canvas-container canvas{display:block;width:100%;height:100%;cursor:grab;}
+  #canvas-container canvas:active{cursor:grabbing;}
+
+  #loading-overlay{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:var(--fondo);gap:10px;z-index:20;
+  }
+  .spinner{width:34px;height:34px;border:3px solid var(--borde);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  #loading-overlay .msg{font-size:13px;color:var(--texto-sec);}
+  #loading-overlay .pct{font-size:20px;font-weight:700;color:var(--navy);}
+
+  #hint{
+    position:absolute;bottom:14px;left:14px;background:rgba(20,24,32,0.72);color:#fff;
+    font-size:11px;padding:6px 10px;border-radius:6px;z-index:10;pointer-events:none;
+  }
+
+  #zoom-controls{
+    position:absolute;bottom:14px;right:14px;display:flex;flex-direction:column;gap:6px;z-index:10;
+  }
+  #zoom-controls button, #center-btn{
+    width:34px;height:34px;border-radius:8px;border:1px solid var(--borde);background:#fff;
+    font-size:16px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.12);color:var(--navy);
+  }
+  #zoom-controls button:hover, #center-btn:hover{background:var(--paper);}
+
+  #panel{
+    width:300px;flex-shrink:0;background:#fff;border-left:1px solid var(--borde);
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .panel-header{padding:14px 16px 10px;border-bottom:1px solid var(--borde);}
+  .panel-header h2{font-size:13px;margin:0 0 2px 0;color:var(--navy);}
+  .panel-header p{font-size:11px;color:var(--texto-sec);margin:0;line-height:1.5;}
+
+  #layer-list{flex:1;overflow-y:auto;padding:10px 14px;}
+
+  .layer-block{margin-bottom:16px;}
+  .layer-block-title{
+    font-size:10.5px;font-weight:700;color:var(--texto-sec);text-transform:uppercase;
+    letter-spacing:.04em;margin-bottom:6px;
+  }
+
+  .layer-row{
+    display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer;
+    border:1px solid transparent;
+  }
+  .layer-row:hover{background:var(--fondo);}
+  .layer-row.locked{cursor:default;opacity:.8;}
+  .layer-row input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+  .layer-row .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .layer-row .label{font-size:12.5px;flex:1;color:var(--texto);}
+  .layer-row .count{font-size:10px;color:var(--texto-sec);}
+  .layer-row.active-pair{border-color:var(--accent);background:#FFF4F0;}
+
+  .exclusive-note{
+    font-size:10.5px;color:var(--texto-sec);background:var(--fondo);border:1px dashed var(--borde);
+    border-radius:7px;padding:7px 9px;margin:2px 0 10px;line-height:1.5;
+  }
+
+  .panel-footer{
+    padding:10px 16px;border-top:1px dashed var(--borde);font-size:10.5px;color:var(--texto-sec);flex-shrink:0;
+  }
+  .panel-footer strong{color:var(--texto);}
+
+  @media (max-width: 760px){
+    main{flex-direction:column;}
+    #panel{width:100%;height:46vh;border-left:none;border-top:1px solid var(--borde);}
+    #viewer-wrap{height:auto;flex:1;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Eden Rock · Visor de Etapas Constructivas</h1>
+    <div class="sub">Propuesta 3 · Steel framing · SketchUp → GLB → Three.js</div>
+  </div>
+  <div class="brand">SMART BUILDING URUGUAY</div>
+</header>
+
+<main>
+  <div id="viewer-wrap">
+    <div id="canvas-container"></div>
+
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <div class="msg">Cargando modelo 3D…</div>
+      <div class="pct" id="loading-pct">0%</div>
+    </div>
+
+    <div id="hint">Click + arrastrar: orbitar · Rueda: zoom · Click derecho: pan</div>
+
+    <div id="zoom-controls">
+      <button id="zoomIn" title="Acercar">＋</button>
+      <button id="zoomOut" title="Alejar">－</button>
+      <button id="center-btn" title="Centrar vista">🎯</button>
+    </div>
+  </div>
+
+  <div id="panel">
+    <div class="panel-header">
+      <h2>Capas / Etapas Constructivas</h2>
+      <p>Tildá o destildá cada capa para mostrarla u ocultarla en el modelo.</p>
+    </div>
+    <div id="layer-list">
+      <div style="padding:20px;text-align:center;color:var(--texto-sec);font-size:12px;">Cargando estructura del modelo…</div>
+    </div>
+    <div class="panel-footer">
+      <strong>Eden Rock — Smart Building Uruguay.</strong> Propuesta 3, 262&nbsp;m².
+    </div>
+  </div>
+</main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+const MODEL_URL = './ESTRUCTURA_EDEN_ROCK_FINAL.glb';
+
+// ============== DEFINICIÓN DE CAPAS ==============
+// Cada capa se identifica por el ancestro nombrado MÁS CERCANO de cada mesh
+// (recorriendo hacia arriba desde la malla). Esto resuelve casos como
+// "Cerchas Hierro" anidado dentro de "Fachadas Ext/Int": como Cerchas Hierro
+// es el ancestro más próximo, esas mallas van al grupo "hierro" y no a "fachadas".
+const GROUP_DEFS = [
+  { id: 'steel',     label: 'Steel Framing (Estructura)',   color: '#2E5395', test: n => /^wall\d+$/i.test(n) },
+  { id: 'hierro',    label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) },
+  { id: 'techo',     label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
+  { id: 'pergola',   label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
+  { id: 'fachadas',  label: 'Fachadas (Terminación Ext/Int)', color: '#B65C9C', test: n => /fachadas ext/i.test(n) },
+  { id: 'platea',    label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground$/i.test(n), alwaysOn: true },
+  { id: 'aberturas', label: 'Aberturas (puertas y ventanas)', color: '#3FA7A0', test: n => /^aberturas$/i.test(n) },
+];
+// Par mutuamente excluyente: mostrar uno oculta el otro automáticamente
+const EXCLUSIVE_PAIR = ['fachadas', 'steel'];
+
+// Estado inicial (visible / oculto) por capa
+const INITIAL_STATE = {
+  platea: true, fachadas: true, steel: false,
+  hierro: false, techo: true, pergola: true, aberturas: true,
+};
+
+// ============== ESCENA THREE.JS ==============
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xdde3ea);
+
+const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.05, 3000);
+camera.position.set(18, 14, 20);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+container.appendChild(renderer.domElement);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x445566, 1.1);
+scene.add(hemi);
+const dir1 = new THREE.DirectionalLight(0xffffff, 1.6);
+dir1.position.set(30, 40, 20);
+scene.add(dir1);
+const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
+dir2.position.set(-20, 15, -25);
+scene.add(dir2);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 2, 0);
+controls.enableZoom = true;
+controls.zoomSpeed = 0.8;
+controls.panSpeed = 0.9;
+controls.rotateSpeed = 0.75;
+controls.mouseButtons = {
+  LEFT: THREE.MOUSE.ROTATE,
+  MIDDLE: THREE.MOUSE.DOLLY,
+  RIGHT: THREE.MOUSE.PAN,
+};
+renderer.domElement.addEventListener('contextmenu', e => e.preventDefault());
+
+window.addEventListener('resize', () => {
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+});
+
+document.getElementById('zoomIn').onclick = () => { camera.position.lerp(controls.target, 0.15); };
+document.getElementById('zoomOut').onclick = () => { camera.position.lerp(controls.target, -0.2); };
+
+let modelRoot = null, initialCamPos = null, initialTarget = null;
+document.getElementById('center-btn').onclick = () => {
+  if (!modelRoot) return;
+  if (initialCamPos) {
+    camera.position.copy(initialCamPos);
+    controls.target.copy(initialTarget);
+  }
+};
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ============== CARGA DEL MODELO ==============
+const loadingOverlay = document.getElementById('loading-overlay');
+const loadingPct = document.getElementById('loading-pct');
+
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://unpkg.com/three@0.160.0/examples/jsm/libs/draco/');
+const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
+
+// Grupos: cada uno acumula referencias directas a los Object3D que poseen mesh
+const GROUPS = {};
+GROUP_DEFS.forEach(g => GROUPS[g.id] = { def: g, nodes: [] });
+GROUPS['otros'] = { def: { id: 'otros', label: 'Otros elementos' }, nodes: [] };
+
+function classify(meshObject) {
+  let cur = meshObject.parent;
+  while (cur) {
+    const name = cur.name || '';
+    for (const g of GROUP_DEFS) {
+      if (g.test(name)) return g.id;
+    }
+    cur = cur.parent;
+  }
+  return 'otros';
+}
+
+loader.load(
+  MODEL_URL,
+  (gltf) => {
+    modelRoot = gltf.scene;
+    scene.add(modelRoot);
+
+    modelRoot.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.castShadow = false;
+        obj.receiveShadow = false;
+        const gid = classify(obj);
+        GROUPS[gid].nodes.push(obj);
+      }
+    });
+
+    // Aplicar estado inicial
+    Object.keys(GROUPS).forEach((gid) => {
+      const visible = gid === 'otros' ? true : (INITIAL_STATE[gid] ?? true);
+      setGroupVisible(gid, visible, false);
+    });
+
+    fitCameraToModel();
+    buildLayerPanel();
+    loadingOverlay.style.display = 'none';
+  },
+  (xhr) => {
+    if (xhr.total) {
+      const pct = Math.round((xhr.loaded / xhr.total) * 100);
+      loadingPct.textContent = pct + '%';
+    }
+  },
+  (err) => {
+    console.error(err);
+    loadingOverlay.querySelector('.msg').textContent = 'Error cargando el modelo. Revisá la consola.';
+    loadingPct.textContent = '';
+  }
+);
+
+function fitCameraToModel() {
+  const box = new THREE.Box3().setFromObject(modelRoot);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const dist = Math.max(size.x, size.y, size.z) * 1.1;
+  camera.position.set(center.x + dist * 0.6, center.y + dist * 0.45, center.z + dist * 0.6);
+  controls.target.copy(center);
+  camera.near = dist / 100;
+  camera.far = dist * 20;
+  camera.updateProjectionMatrix();
+  initialCamPos = camera.position.clone();
+  initialTarget = center.clone();
+}
+
+function setGroupVisible(gid, visible, updateUI = true) {
+  const g = GROUPS[gid];
+  if (!g) return;
+  g.nodes.forEach(n => { n.visible = visible; });
+  if (updateUI) {
+    const cb = document.querySelector(`input[data-gid="${gid}"]`);
+    if (cb) cb.checked = visible;
+    const row = document.querySelector(`.layer-row[data-gid="${gid}"]`);
+    if (row) row.classList.toggle('active-pair', visible && EXCLUSIVE_PAIR.includes(gid));
+  }
+}
+
+function isExclusive(gid) { return EXCLUSIVE_PAIR.includes(gid); }
+
+function toggleGroup(gid, checked) {
+  setGroupVisible(gid, checked);
+  if (checked && isExclusive(gid)) {
+    // Apagar el otro miembro del par excluyente
+    EXCLUSIVE_PAIR.filter(x => x !== gid).forEach(other => setGroupVisible(other, false));
+  }
+}
+
+// ============== PANEL LATERAL ==============
+function buildLayerPanel() {
+  const list = document.getElementById('layer-list');
+  list.innerHTML = '';
+
+  // --- Platea (siempre visible, bloqueada) ---
+  const blockPlatea = document.createElement('div');
+  blockPlatea.className = 'layer-block';
+  blockPlatea.innerHTML = `<div class="layer-block-title">Base</div>`;
+  const plateaDef = GROUP_DEFS.find(g => g.id === 'platea');
+  const plateaRow = document.createElement('div');
+  plateaRow.className = 'layer-row locked';
+  plateaRow.innerHTML = `
+    <span class="dot" style="background:${plateaDef.color}"></span>
+    <span class="label">${plateaDef.label}</span>
+    <span class="count">siempre visible</span>
+  `;
+  blockPlatea.appendChild(plateaRow);
+  list.appendChild(blockPlatea);
+
+  // --- Par excluyente: Fachadas vs Steel Framing ---
+  const blockPair = document.createElement('div');
+  blockPair.className = 'layer-block';
+  blockPair.innerHTML = `<div class="layer-block-title">Terminación vs. Estructura</div>`;
+  blockPair.appendChild(makeRow('fachadas'));
+  blockPair.appendChild(makeRow('steel'));
+  const note = document.createElement('div');
+  note.className = 'exclusive-note';
+  note.textContent = 'Mutuamente excluyentes: al mostrar una, la otra se oculta automáticamente para que no se superpongan.';
+  blockPair.appendChild(note);
+  list.appendChild(blockPair);
+
+  // --- Opcionales independientes ---
+  const blockOpc = document.createElement('div');
+  blockOpc.className = 'layer-block';
+  blockOpc.innerHTML = `<div class="layer-block-title">Pestañas opcionales</div>`;
+  ['hierro', 'techo', 'pergola', 'aberturas'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
+  list.appendChild(blockOpc);
+
+  function makeRow(gid) {
+    const g = GROUPS[gid];
+    const row = document.createElement('div');
+    row.className = 'layer-row';
+    row.dataset.gid = gid;
+    const checked = INITIAL_STATE[gid] ? 'checked' : '';
+    row.innerHTML = `
+      <input type="checkbox" data-gid="${gid}" ${checked}>
+      <span class="dot" style="background:${g.def.color}"></span>
+      <span class="label">${g.def.label}</span>
+      <span class="count">${g.nodes.length}</span>
+    `;
+    const cb = row.querySelector('input');
+    cb.addEventListener('change', () => toggleGroup(gid, cb.checked));
+    row.addEventListener('click', (e) => {
+      if (e.target === cb) return;
+      cb.checked = !cb.checked;
+      toggleGroup(gid, cb.checked);
+    });
+    if (checked && isExclusive(gid)) row.classList.add('active-pair');
+    return row;
+  }
+}
+</script>
+</body>
+</html>
