@@ -254,17 +254,24 @@ GROUPS['otros'] = { def: { id: 'otros', label: 'Otros elementos' }, nodes: [] };
 
 function classify(meshObject) {
   let cur = meshObject.parent;
+  let anyNamedAncestor = false;
   while (cur) {
     // GLTFLoader sanitiza espacios a guion bajo en los nombres de nodo (ej. "CERCHAS HIERRO"
     // exportado por SketchUp llega acá como "CERCHAS_HIERRO"). Normalizamos antes de testear
     // o los regex con espacio literal nunca matchean y el nodo cae siempre a "otros"
     // (grupo que se renderiza sí o sí, sin poder ocultarlo con los checkboxes).
+    if (cur.name && cur.name !== 'Assembly-6119') anyNamedAncestor = true;
     const name = (cur.name || '').replace(/[_-]+/g, ' ');
     for (const g of GROUP_DEFS) {
       if (g.test(name)) return g.id;
     }
     cur = cur.parent;
   }
+  // 12 piezas del techo (correas/riostras, algunas de largo completo: -2,5 a 18,1 en Z,
+  // el ancho total de las 8 cerchas) quedaron sin ningún nombre en el export de SketchUp
+  // — nunca se agruparon como componente. Verificado pieza por pieza: son estructura de
+  // hierro real, no basura. Sin ancestro nombrado alguno -> van a hierro en vez de otros.
+  if (!anyNamedAncestor) return 'hierro';
   return 'otros';
 }
 
