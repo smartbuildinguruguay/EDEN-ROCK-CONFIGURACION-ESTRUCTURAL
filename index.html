@@ -167,7 +167,7 @@ const GROUP_DEFS = [
   { id: 'techo',       label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
   { id: 'pergola',     label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
   { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas ext/i.test(n) || /^aberturas$/i.test(n) },
-  { id: 'platea',      label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground$/i.test(n), alwaysOn: true },
+  { id: 'platea',      label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground/i.test(n), alwaysOn: true },
 ];
 // Par mutuamente excluyente: mostrar uno oculta el otro automáticamente
 const EXCLUSIVE_PAIR = ['terminacion', 'steel'];
@@ -186,7 +186,7 @@ scene.background = new THREE.Color(0xdde3ea);
 const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.05, 3000);
 camera.position.set(18, 14, 20);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -255,7 +255,11 @@ GROUPS['otros'] = { def: { id: 'otros', label: 'Otros elementos' }, nodes: [] };
 function classify(meshObject) {
   let cur = meshObject.parent;
   while (cur) {
-    const name = cur.name || '';
+    // GLTFLoader sanitiza espacios a guion bajo en los nombres de nodo (ej. "CERCHAS HIERRO"
+    // exportado por SketchUp llega acá como "CERCHAS_HIERRO"). Normalizamos antes de testear
+    // o los regex con espacio literal nunca matchean y el nodo cae siempre a "otros"
+    // (grupo que se renderiza sí o sí, sin poder ocultarlo con los checkboxes).
+    const name = (cur.name || '').replace(/[_-]+/g, ' ');
     for (const g of GROUP_DEFS) {
       if (g.test(name)) return g.id;
     }
@@ -276,6 +280,29 @@ loader.load(
         obj.receiveShadow = false;
         const gid = classify(obj);
         GROUPS[gid].nodes.push(obj);
+        // Las cerchas de hierro son barras muy finas (relación largo/espesor ~78:1).
+        // A ciertos ángulos, las caras casi coplanares "z-fightean" y dan la sensación
+        // visual de que el fierro se dobla o quiebra en diagonal — no es la geometría
+        // real (confirmado: los datos del .glb son rectas y consistentes entre instancias),
+        // es un artefacto de render. polygonOffset separa las caras en el depth buffer.
+        if (gid === 'hierro' && obj.material) {
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach((m) => {
+            m.polygonOffset = true;
+            m.polygonOffsetFactor = -1;
+            m.polygonOffsetUnits = -1;
+            m.side = THREE.DoubleSide;
+          });
+          // Contorno: las barras son ~78x más largas que anchas, así que de canto
+          // se reducen a una línea casi invisible y varias cerchas juntas parecen
+          // un enredo. El contorno de aristas queda legible desde cualquier ángulo.
+          const edges = new THREE.EdgesGeometry(obj.geometry, 25);
+          const outline = new THREE.LineSegments(
+            edges,
+            new THREE.LineBasicMaterial({ color: 0x5c3d00, transparent: true, opacity: 0.85 })
+          );
+          obj.add(outline);
+        }
       }
     });
 
