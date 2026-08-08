@@ -296,7 +296,23 @@ loader.load(
       if (obj.isMesh) {
         obj.castShadow = false;
         obj.receiveShadow = false;
+        // Varias piezas (114 de 160 en el techo Isoroof, por ejemplo) vienen con las
+        // normales invertidas — un patrón típico de cómo SketchUp espeja copias de
+        // tejas/paneles. Con material a una sola cara, esas piezas se ven negras al
+        // mirarlas desde el lado "de atrás" (ej. el cielorraso). Doble cara lo evita
+        // sin tener que corregir cada pieza individualmente en el modelo fuente.
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach((m) => { if (m) m.side = THREE.DoubleSide; });
         const gid = classify(obj);
+        // Cielorraso del techo Isoroof negro: 80 de las 160 piezas son caras traseras
+        // duplicadas SIN material asignado en el .glb (GLTFLoader les pone un blanco
+        // por defecto que renderiza mal desde abajo). La cara buena ("M05_Graphite_Haze")
+        // ya cubre la misma geometría, así que se ocultan las duplicadas sin material.
+        const firstMat = Array.isArray(obj.material) ? obj.material[0] : obj.material;
+        if (gid === 'techo' && firstMat && firstMat.name === '') {
+          obj.visible = false;
+          return;
+        }
         // Tabla de piso de madera (material "Wood_Floor_01_1K") que quedó agrupada por
         // error dentro de "Estructura Metálica" al reorganizar componentes en SketchUp
         // (el mismo material se usa correctamente en 2 lugares más — Fachadas y Platea —
