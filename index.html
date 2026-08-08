@@ -163,7 +163,7 @@ const MODEL_URL = './ESTRUCTURA_EDEN_ROCK_FINAL.glb';
 // es el ancestro más próximo, esas mallas van al grupo "hierro" y no a "fachadas".
 const GROUP_DEFS = [
   { id: 'steel',       label: 'Steel Framing (Estructura)',   color: '#2E5395', test: n => /^wall\d+$/i.test(n) },
-  { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) },
+  { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) || /estructura metalica/i.test(n) },
   { id: 'techo',       label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
   { id: 'pergola',     label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
   { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas/i.test(n) || /^aberturas$/i.test(n) },
