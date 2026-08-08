@@ -304,6 +304,18 @@ loader.load(
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
         mats.forEach((m) => { if (m) m.side = THREE.DoubleSide; });
         const gid = classify(obj);
+        // Piso de brillo mínimo SOLO en el techo: algunas piezas (con transform casi
+        // degenerado) dan una normal mal calculada en el shader y quedan en negro
+        // puro sin importar el lado. En vez de perseguir cada caso, se les da un
+        // poco de luz propia (emissive tenue) para que nunca caigan a negro total.
+        if (gid === 'techo') {
+          mats.forEach((m) => {
+            if (m && m.color) {
+              m.emissive = m.emissive || new THREE.Color(0x000000);
+              m.emissive.copy(m.color).multiplyScalar(0.12);
+            }
+          });
+        }
         // Cielorraso del techo Isoroof negro: 80 de las 160 piezas son caras traseras
         // duplicadas SIN material asignado en el .glb (GLTFLoader les pone un blanco
         // por defecto que renderiza mal desde abajo). La cara buena ("M05_Graphite_Haze")
