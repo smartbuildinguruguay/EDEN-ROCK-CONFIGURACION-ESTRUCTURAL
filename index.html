@@ -307,10 +307,31 @@ loader.load(
             m.polygonOffsetUnits = -1;
             m.side = THREE.DoubleSide;
           });
-          // Contorno: las barras son ~78x más largas que anchas, así que de canto
-          // se reducen a una línea casi invisible y varias cerchas juntas parecen
-          // un enredo. El contorno de aristas queda legible desde cualquier ángulo.
-          const edges = new THREE.EdgesGeometry(obj.geometry, 25);
+          // Las barras de hierro (cerchas y correas) miden ~0,08-0,17 de espesor por
+          // hasta ~20 de largo — una proporción tan extrema que de canto casi desaparecen
+          // y varias juntas parecen "dobladas" (verificado con los vértices: la geometría
+          // real es perfectamente recta, es un efecto óptico de la proporción, no un dato
+          // corrupto). Se engrosa x4 el corte transversal (los 2 ejes cortos de la caja
+          // local), dejando el eje largo intacto, para que se lean bien a cualquier ángulo.
+          const geom = obj.geometry.clone();
+          obj.geometry = geom;
+          geom.computeBoundingBox();
+          const bb = geom.boundingBox;
+          const dims = ['x', 'y', 'z'];
+          const extents = { x: bb.max.x - bb.min.x, y: bb.max.y - bb.min.y, z: bb.max.z - bb.min.z };
+          const longAxis = dims.reduce((a, b) => (extents[a] > extents[b] ? a : b));
+          const THICKEN = 4;
+          const center = new THREE.Vector3();
+          bb.getCenter(center);
+          geom.translate(-center.x, -center.y, -center.z);
+          geom.scale(
+            longAxis === 'x' ? 1 : THICKEN,
+            longAxis === 'y' ? 1 : THICKEN,
+            longAxis === 'z' ? 1 : THICKEN
+          );
+          geom.translate(center.x, center.y, center.z);
+          // Contorno adicional para que el borde se lea nítido incluso engrosado.
+          const edges = new THREE.EdgesGeometry(geom, 25);
           const outline = new THREE.LineSegments(
             edges,
             new THREE.LineBasicMaterial({ color: 0x5c3d00, transparent: true, opacity: 0.85 })
