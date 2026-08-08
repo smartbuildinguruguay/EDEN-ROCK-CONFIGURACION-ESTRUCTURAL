@@ -268,7 +268,11 @@ function classify(meshObject) {
     // exportado por SketchUp llega acá como "CERCHAS_HIERRO"). Normalizamos antes de testear
     // o los regex con espacio literal nunca matchean y el nodo cae siempre a "otros"
     // (grupo que se renderiza sí o sí, sin poder ocultarlo con los checkboxes).
-    if (cur.name && !/^Assembly-\d+$/.test(cur.name)) anyNamedAncestor = true;
+    // "Geom3D" (a veces con sufijo _N) es el nombre genérico que deja SketchUp cuando
+    // una pieza pierde su agrupación real (ej. la pérgola quedó suelta con este nombre
+    // en vez de "PERGOLA DE MADERA"). No cuenta como nombre real, si no cae en "otros"
+    // (grupo siempre visible, imposible de ocultar con los checkboxes).
+    if (cur.name && !/^Assembly-\d+$/.test(cur.name) && !/^Geom3D_?\d*$/.test(cur.name)) anyNamedAncestor = true;
     const name = (cur.name || '').replace(/[_-]+/g, ' ');
     for (const g of GROUP_DEFS) {
       if (g.test(name)) return g.id;
