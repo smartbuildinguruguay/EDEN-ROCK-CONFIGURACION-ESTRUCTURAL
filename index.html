@@ -166,16 +166,24 @@ const GROUP_DEFS = [
   { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) },
   { id: 'techo',       label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
   { id: 'pergola',     label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
-  { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas ext/i.test(n) || /^aberturas$/i.test(n) },
-  { id: 'platea',      label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground/i.test(n), alwaysOn: true },
+  { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas/i.test(n) || /^aberturas$/i.test(n) },
+  { id: 'platea',      label: 'Platea de Hormigón',           color: '#9AA3AF', test: n => /^ground/i.test(n) || /platea/i.test(n), alwaysOn: true },
+  { id: 'sinclasificar', label: '⚠️ Sin clasificar (a identificar)', color: '#DC2626', test: () => false },
 ];
 // Par mutuamente excluyente: mostrar uno oculta el otro automáticamente
 const EXCLUSIVE_PAIR = ['terminacion', 'steel'];
+// Al activar un lado del par excluyente, se arrastran estas capas con él
+// (Terminación = fachadas+techo+pérgola puestos; Estructura = solo steel+hierro)
+const MODE_BUNDLE = {
+  terminacion: { show: ['techo', 'pergola'], hide: ['hierro'] },
+  steel:       { show: ['hierro'], hide: ['techo', 'pergola'] },
+};
 
 // Estado inicial (visible / oculto) por capa
 const INITIAL_STATE = {
   platea: true, terminacion: true, steel: false,
   hierro: false, techo: true, pergola: true,
+  sinclasificar: true,
 };
 
 // ============== ESCENA THREE.JS ==============
@@ -260,18 +268,17 @@ function classify(meshObject) {
     // exportado por SketchUp llega acá como "CERCHAS_HIERRO"). Normalizamos antes de testear
     // o los regex con espacio literal nunca matchean y el nodo cae siempre a "otros"
     // (grupo que se renderiza sí o sí, sin poder ocultarlo con los checkboxes).
-    if (cur.name && cur.name !== 'Assembly-6119') anyNamedAncestor = true;
+    if (cur.name && !/^Assembly-\d+$/.test(cur.name)) anyNamedAncestor = true;
     const name = (cur.name || '').replace(/[_-]+/g, ' ');
     for (const g of GROUP_DEFS) {
       if (g.test(name)) return g.id;
     }
     cur = cur.parent;
   }
-  // 12 piezas del techo (correas/riostras, algunas de largo completo: -2,5 a 18,1 en Z,
-  // el ancho total de las 8 cerchas) quedaron sin ningún nombre en el export de SketchUp
-  // — nunca se agruparon como componente. Verificado pieza por pieza: son estructura de
-  // hierro real, no basura. Sin ancestro nombrado alguno -> van a hierro en vez de otros.
-  if (!anyNamedAncestor) return 'hierro';
+  // 71 piezas de este export quedaron sin ningún nombre (mezcla de hojas de puertas/ventanas
+  // y correas de hierro, sin forma de distinguirlas por texto). Van a un grupo aparte,
+  // visible por default, para identificarlas una por una antes de reclasificarlas bien.
+  if (!anyNamedAncestor) return 'sinclasificar';
   return 'otros';
 }
 
@@ -319,6 +326,12 @@ loader.load(
       setGroupVisible(gid, visible, false);
     });
 
+    // Fuerza la actualización de matrices del modelo recién cargado antes de encuadrar
+    // la cámara. Sin esto, el primer fitCameraToModel() puede correr antes de que
+    // Three.js termine de propagar transforms en árboles muy grandes (7000+ nodos),
+    // dando una posición de cámara absurda (a miles de unidades) y canvas en blanco
+    // hasta tocar "Centrar" a mano.
+    modelRoot.updateMatrixWorld(true);
     fitCameraToModel();
     buildLayerPanel();
     loadingOverlay.style.display = 'none';
@@ -386,6 +399,13 @@ function toggleGroup(gid, checked) {
   if (checked && isExclusive(gid)) {
     // Apagar el otro miembro del par excluyente
     EXCLUSIVE_PAIR.filter(x => x !== gid).forEach(other => setGroupVisible(other, false));
+    // Arrastrar las capas asociadas a este modo (Terminación: techo+pérgola puestos,
+    // hierro apagado / Estructura: hierro puesto, techo+pérgola apagados)
+    const bundle = MODE_BUNDLE[gid];
+    if (bundle) {
+      bundle.show.forEach(id => setGroupVisible(id, true));
+      bundle.hide.forEach(id => setGroupVisible(id, false));
+    }
   }
 }
 
@@ -427,6 +447,13 @@ function buildLayerPanel() {
   blockOpc.innerHTML = `<div class="layer-block-title">Pestañas opcionales</div>`;
   ['hierro', 'techo', 'pergola'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
   list.appendChild(blockOpc);
+
+  // --- Sin clasificar (piezas del último export sin agrupar, a identificar) ---
+  const blockSin = document.createElement('div');
+  blockSin.className = 'layer-block';
+  blockSin.innerHTML = `<div class="layer-block-title">Por identificar</div>`;
+  blockSin.appendChild(makeRow('sinclasificar'));
+  list.appendChild(blockSin);
 
   function makeRow(gid) {
     const g = GROUPS[gid];
