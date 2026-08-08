@@ -293,6 +293,15 @@ loader.load(
         obj.castShadow = false;
         obj.receiveShadow = false;
         const gid = classify(obj);
+        // Tabla de piso de madera (material "Wood_Floor_01_1K") que quedó agrupada por
+        // error dentro de "Estructura Metálica" al reorganizar componentes en SketchUp
+        // (el mismo material se usa correctamente en 2 lugares más — Fachadas y Platea —
+        // así que se excluye por la combinación grupo+material, no por el material solo).
+        const matName = Array.isArray(obj.material) ? (obj.material[0] && obj.material[0].name) : (obj.material && obj.material.name);
+        if (gid === 'hierro' && matName === 'Wood_Floor_01_1K') {
+          obj.visible = false;
+          return;
+        }
         GROUPS[gid].nodes.push(obj);
         // Las cerchas de hierro son barras muy finas (relación largo/espesor ~78:1).
         // A ciertos ángulos, las caras casi coplanares "z-fightean" y dan la sensación
