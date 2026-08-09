@@ -320,21 +320,9 @@ loader.load(
             }
           });
         }
-        // Cielorraso del techo Isoroof negro: 80 de las 160 piezas son caras traseras
-        // DUPLICADAS Y COINCIDENTES con la cara de arriba (mismo lugar exacto en el
-        // espacio), sin material asignado en el .glb por un problema de exportación.
-        // Dejar las dos visibles compite por el mismo píxel (z-fighting): a veces
-        // gana la buena, a veces la rota, y el negro vuelve de forma impredecible.
-        // Se oculta SOLO la duplicada sin material — la cara real del panel (con su
-        // material "M05_Graphite_Haze") sigue ahí y sigue siendo la que se ve, así
-        // que no se pierde ninguna superficie del componente, solo la copia de más.
+        // A pedido: no se oculta nada del componente de techo, se deja tal cual
+        // viene del .glb (incluida la cara sin material, sin tocarla).
         const firstMat = Array.isArray(obj.material) ? obj.material[0] : obj.material;
-        if (firstMat && firstMat.name === '') {
-          obj.visible = false;
-          return;
-        }
-        // Confirmado el mismo patrón sin ser una cara real en otros grupos (ej.
-        // Estructura de Hierro): ahí sí son duplicados sobrantes, se ocultan.
         if (gid !== 'techo' && firstMat && firstMat.name === '') {
           obj.visible = false;
           return;
