@@ -163,7 +163,7 @@ const MODEL_URL = './ESTRUCTURA_EDEN_ROCK_FINAL.glb';
 // es el ancestro más próximo, esas mallas van al grupo "hierro" y no a "fachadas".
 const GROUP_DEFS = [
   { id: 'steel',       label: 'Steel Framing (Estructura)',   color: '#2E5395', test: n => /^wall\d+$/i.test(n) },
-  { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) || /estructura metalica/i.test(n) },
+  { id: 'hierro',      label: 'Estructura de Hierro (Cerchas)', color: '#8A6100', test: n => /cerchas hierro/i.test(n) || /estructura metalica/i.test(n), alwaysOn: true },
   { id: 'techo',       label: 'Techo Isoroof',                color: '#D97757', test: n => /isoroof/i.test(n) },
   { id: 'pergola',     label: 'Pérgola de Madera',            color: '#6B8E4E', test: n => /pergola/i.test(n) },
   { id: 'terminacion', label: 'Fachadas y Aberturas (Terminación)', color: '#B65C9C', test: n => /fachadas/i.test(n) || /^aberturas$/i.test(n) },
@@ -175,14 +175,14 @@ const EXCLUSIVE_PAIR = ['terminacion', 'steel'];
 // Al activar un lado del par excluyente, se arrastran estas capas con él
 // (Terminación = fachadas+techo+pérgola puestos; Estructura = solo steel+hierro)
 const MODE_BUNDLE = {
-  terminacion: { show: ['techo', 'pergola'], hide: ['hierro'] },
-  steel:       { show: ['hierro'], hide: ['techo', 'pergola'] },
+  terminacion: { show: ['techo', 'pergola'], hide: [] },
+  steel:       { show: [], hide: ['techo', 'pergola'] },
 };
 
 // Estado inicial (visible / oculto) por capa
 const INITIAL_STATE = {
   platea: true, terminacion: true, steel: false,
-  hierro: false, techo: true, pergola: true,
+  hierro: true, techo: true, pergola: true,
   sinclasificar: true,
 };
 
@@ -488,19 +488,21 @@ function buildLayerPanel() {
   const list = document.getElementById('layer-list');
   list.innerHTML = '';
 
-  // --- Platea (siempre visible, bloqueada) ---
+  // --- Platea y Estructura de Hierro (siempre visibles, bloqueadas) ---
   const blockPlatea = document.createElement('div');
   blockPlatea.className = 'layer-block';
   blockPlatea.innerHTML = `<div class="layer-block-title">Base</div>`;
-  const plateaDef = GROUP_DEFS.find(g => g.id === 'platea');
-  const plateaRow = document.createElement('div');
-  plateaRow.className = 'layer-row locked';
-  plateaRow.innerHTML = `
-    <span class="dot" style="background:${plateaDef.color}"></span>
-    <span class="label">${plateaDef.label}</span>
-    <span class="count">siempre visible</span>
-  `;
-  blockPlatea.appendChild(plateaRow);
+  ['platea', 'hierro'].forEach((gid) => {
+    const def = GROUP_DEFS.find(g => g.id === gid);
+    const row = document.createElement('div');
+    row.className = 'layer-row locked';
+    row.innerHTML = `
+      <span class="dot" style="background:${def.color}"></span>
+      <span class="label">${def.label}</span>
+      <span class="count">siempre visible</span>
+    `;
+    blockPlatea.appendChild(row);
+  });
   list.appendChild(blockPlatea);
 
   // --- Par excluyente: Fachadas vs Steel Framing ---
@@ -519,7 +521,7 @@ function buildLayerPanel() {
   const blockOpc = document.createElement('div');
   blockOpc.className = 'layer-block';
   blockOpc.innerHTML = `<div class="layer-block-title">Pestañas opcionales</div>`;
-  ['hierro', 'techo', 'pergola'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
+  ['techo', 'pergola'].forEach(gid => blockOpc.appendChild(makeRow(gid)));
   list.appendChild(blockOpc);
 
   // --- Sin clasificar (piezas del último export sin agrupar, a identificar) ---
