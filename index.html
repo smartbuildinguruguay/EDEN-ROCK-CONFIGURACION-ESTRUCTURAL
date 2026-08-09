@@ -200,14 +200,20 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 container.appendChild(renderer.domElement);
 
-const hemi = new THREE.HemisphereLight(0xffffff, 0x445566, 1.8);
+const hemi = new THREE.HemisphereLight(0xffffff, 0x556677, 2.2);
 scene.add(hemi);
-const dir1 = new THREE.DirectionalLight(0xffffff, 2.4);
+const dir1 = new THREE.DirectionalLight(0xffffff, 2.2);
 dir1.position.set(30, 40, 20);
 scene.add(dir1);
-const dir2 = new THREE.DirectionalLight(0xffffff, 1.2);
+const dir2 = new THREE.DirectionalLight(0xffffff, 1.3);
 dir2.position.set(-20, 15, -25);
 scene.add(dir2);
+// Tercera luz de relleno: un techo a cuatro aguas tiene faldones mirando a
+// direcciones bien distintas, y con solo 2 luces direccionales quedaban 1 o 2
+// bien iluminados y el resto oscuros. Esta cubre el ángulo que faltaba.
+const dir3 = new THREE.DirectionalLight(0xffffff, 1.1);
+dir3.position.set(-25, 25, 30);
+scene.add(dir3);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -307,6 +313,21 @@ loader.load(
         // sin tener que corregir cada pieza individualmente en el modelo fuente.
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
         mats.forEach((m) => { if (m) m.side = THREE.DoubleSide; });
+        // El exportador de SketchUp le pone metallic=0.5 por defecto a CUALQUIER
+        // material sin flujo de metalicidad definido a mano — incluidas madera,
+        // hormigón y contrachapado, que deberían ser 0 (mate). Sin un mapa de
+        // entorno para reflejar, un material "medio metálico" se ve oscuro y con
+        // brillo raro salvo justo donde pega el specular. Se corrige a 0 en todo
+        // lo que no sea metal de verdad (por nombre de material).
+        mats.forEach((m) => {
+          if (m && typeof m.metalness === 'number') {
+            const isRealMetal = /metal/i.test(m.name || '');
+            if (!isRealMetal) {
+              m.metalness = 0;
+              if (m.roughness < 0.7) m.roughness = 0.85;
+            }
+          }
+        });
         const gid = classify(obj);
         // Piso de brillo mínimo SOLO en el techo: algunas piezas (con transform casi
         // degenerado) dan una normal mal calculada en el shader y quedan en negro
