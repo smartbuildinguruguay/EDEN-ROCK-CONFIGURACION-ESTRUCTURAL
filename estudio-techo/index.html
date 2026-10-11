@@ -69,7 +69,7 @@ a{color:var(--steel)}
 <button role="tab" data-t="resumen">Resumen</button>
 <button role="tab" data-t="cercha">Cercha y herrajes</button>
 <button role="tab" data-t="cargas">Cargas, columnas y encadenado</button>
-<button role="tab" data-t="techo">Techo Isoroof</button>
+<button role="tab" data-t="techo">Techo y cotización</button>
 <button role="tab" data-t="cruces">Viento y cruces</button>
 <button role="tab" data-t="anclajes">Anclajes</button>
 </div></nav>
@@ -77,7 +77,7 @@ a{color:var(--steel)}
 
 <section class="panel" id="resumen">
 <h2>Columnas y encadenado en caño 100 × 100 × 3,2 mm, arriostrados con cruces de steel framing</h2>
-<p class="lead">Nave central de cerchas de lapacho 20 × 20 con 8,05 m de luz, sobre columnas de caño de 3,00 m. Techo a dos aguas de 23,9 m de largo, con Isoroof 30 mm y machimbre a la vista.</p>
+<p class="lead">Nave central de cerchas de lapacho 20 × 20 con 8,05 m de luz, sobre columnas de caño de 3,00 m. Techo a dos aguas de 23,9 m de largo, con panel aislante de 30 mm y machimbre a la vista.</p>
 <div class="grid">
 <div class="stat w"><b>950 kg</b><span>pesa cada cercha de lapacho</span></div>
 <div class="stat"><b>2,1 t</b><span>recibe cada columna en servicio</span></div>
@@ -103,7 +103,7 @@ a{color:var(--steel)}
 <tr><td>Cercha</td><td>950 kg cada una. Tirante en dos tramos de 4,02 m unidos con planchuela embutida</td></tr>
 <tr><td>Herrajes</td><td>Un solo herraje por cercha: la T invertida del nudo central. El resto, barbilla y tornillos inoxidables</td></tr>
 <tr><td>Columnas y encadenado</td><td>Caño 100 × 100 × 3,2 mm, acero ASTM A500 Grado B</td></tr>
-<tr><td>Techo</td><td>Isoroof 30 mm: 88 paneles, 48 en la nave, 22 y 18 en los faldones laterales</td></tr>
+<tr><td>Techo</td><td>Panel aislante de 30 mm: 88 paneles, cotizados en USD 27.438 con IVA</td></tr>
 <tr><td>Arriostramiento</td><td>Cruces de San Andrés con fleje galvanizado de steel framing, en muros y techo</td></tr>
 <tr><td>Anclajes</td><td>Cada apoyo se ancla para tracción por viento</td></tr>
 </table></div>
@@ -216,7 +216,7 @@ a{color:var(--steel)}
 <tr><th>Concepto</th><th>Cuenta</th><th class="n">kg por cercha</th></tr>
 <tr><td>Cercha de lapacho 20 × 20</td><td>21,66 ml × 44 kg/ml</td><td class="n">950</td></tr>
 <tr><td>Herrajes y pasadores</td><td></td><td class="n">50</td></tr>
-<tr><td>Cubierta: Isoroof, machimbre y correas</td><td>28,8 m² × 26,2 kg/m²</td><td class="n">755</td></tr>
+<tr><td>Cubierta: panel de techo, machimbre y correas</td><td>28,8 m² × 26,2 kg/m²</td><td class="n">755</td></tr>
 <tr class="pick"><td>Peso propio</td><td></td><td class="n">1.755</td></tr>
 <tr><td>Sobrecarga de uso y mantenimiento</td><td>27,1 m² × 50 kg/m²</td><td class="n">1.356</td></tr>
 <tr class="tot"><td>Total por cercha</td><td></td><td class="n">3.111</td></tr>
@@ -243,15 +243,26 @@ a{color:var(--steel)}
 </table></div>
 
 <p>El peso no es el problema: hasta el caño de 2 mm lo soporta. El de 2 mm se descarta porque su pared abolla antes de agotar el acero, no deja reserva frente al viento y es delicado de soldar.</p>
-<h3>4. Espesor del encadenado superior</h3>
+<h3>4. Sección del encadenado superior</h3>
 <div class="tw"><table class="k">
 <tr><th>Caño (mm)</th><th class="n">kg/m</th><th class="n">Uso</th><th class="n">Flecha lateral</th><th>Resultado</th></tr>
-<tr><td>100 × 100 × 2,0</td><td class="n">6,1</td><td class="n">114 %</td><td class="n">8 mm</td><td>No verifica</td></tr>
-<tr><td>100 × 100 × 2,5</td><td class="n">7,6</td><td class="n">80 %</td><td class="n">7 mm</td><td>Verifica, con poco margen</td></tr>
-<tr class="pick"><td>100 × 100 × 3,2</td><td class="n">9,6</td><td class="n">64 %</td><td class="n">5 mm</td><td>Recomendado</td></tr>
+<tr><td>100 × 50 × 3,2, de canto</td><td class="n">7,1</td><td class="n">191 %</td><td class="n">41 mm</td><td>No verifica</td></tr>
+<tr><td>100 × 50 × 3,2, acostado</td><td class="n">7,1</td><td class="n">170 %</td><td class="n">14 mm</td><td>No verifica</td></tr>
+<tr><td>100 × 100 × 2,5</td><td class="n">7,6</td><td class="n">100 %</td><td class="n">11 mm</td><td>Al límite</td></tr>
+<tr class="pick"><td>100 × 100 × 3,2</td><td class="n">9,6</td><td class="n">81 %</td><td class="n">8 mm</td><td>Recomendado</td></tr>
+<tr><td>100 × 100 × 4,0</td><td class="n">11,8</td><td class="n">66 %</td><td class="n">7 mm</td><td>Sobrado</td></tr>
 </table></div>
 
-<p>El peso de la cercha no pasa por el encadenado: baja directo a la columna. El encadenado ata las cabezas de columna, recibe el viento del muro y trabaja como cordón de las cruces del techo.</p>
+<p>El peso de la cercha no pasa por el encadenado: baja directo a la columna. El encadenado ata las cabezas de columna, recibe el viento del muro en vanos de 3,37 m y trabaja como cordón de las cruces del techo. Por eso necesita resistir de costado tanto como hacia abajo, y el caño cuadrado es el que mejor lo hace.</p>
+<div class="tw"><table>
+<tr><th>Montaje del encadenado</th><th>Detalle</th></tr>
+<tr><td>Posición</td><td>Continuo, apoyado sobre la cabeza de las columnas</td></tr>
+<tr><td>Columna</td><td>Cerrada arriba con tapa de 100 × 100 × 6 mm; para mantener 3,00 m de altura total se corta a 2,90 m</td></tr>
+<tr><td>Unión</td><td>Soldadura en todo el contorno del apoyo</td></tr>
+<tr><td>Empalmes</td><td>Siempre sobre una columna, nunca a mitad de vano</td></tr>
+<tr><td>Cercha</td><td>Apoya sobre el encadenado con la placa de asiento, justo encima de la columna</td></tr>
+</table></div>
+
 <div class="callout s"><p><b>Condición:</b> cada cercha y cada tirante de los cuerpos laterales apoya sobre una columna, nunca a mitad de vano del encadenado.</p></div>
 <h3>Especificación</h3>
 <div class="tw"><table>
@@ -264,40 +275,57 @@ a{color:var(--steel)}
 </section>
 
 <section class="panel" id="techo">
-<h2>Techo de Isoroof 30 mm: 88 paneles, 48 en la nave y 40 en los laterales</h2>
+<h2>Techo de panel aislante de 30 mm: 88 paneles cotizados en USD 27.438</h2>
 <div class="grid">
-<div class="stat"><b>2 × 23,9 m</b><span>dos faldones a lo largo de la nave, de 4,28 m de caída cada uno</span></div>
 <div class="stat"><b>88 paneles</b><span>de 1,00 m de ancho: 48 en la nave, 22 y 18 en los laterales</span></div>
-<div class="stat"><b>36 %</b><span>de pendiente; el panel pide 7 % como mínimo</span></div>
-<div class="stat s"><b>10 kg/m²</b><span>pesa el panel de 30 mm</span></div>
+<div class="stat"><b>399 m²</b><span>de cubierta colocada: 211 en la nave y 188 en los laterales</span></div>
+<div class="stat"><b>36 %</b><span>de pendiente en la nave</span></div>
+<div class="stat w"><b>USD 27.438</b><span>total con IVA, con flete a obra</span></div>
 </div>
-<h3>El panel</h3>
+<h3>El panel cotizado</h3>
 <div class="tw"><table>
 <tr><th>Característica</th><th>Dato</th></tr>
-<tr><td>Tipo</td><td>Isoroof de 30 mm: chapa trapezoidal prepintada arriba y núcleo aislante de PIR</td></tr>
+<tr><td>Producto</td><td>Hiansa-Panel 5G de 30 mm, con núcleo de poliuretano</td></tr>
+<tr><td>Color</td><td>Gris Pizarra</td></tr>
 <tr><td>Ancho útil</td><td>1,00 m</td></tr>
-<tr><td>Largo</td><td>A medida, de una sola pieza por faldón; el mínimo de fábrica es 3,50 m</td></tr>
+<tr><td>Largo</td><td>Viene de 4,95 m y el proveedor lo corta: 4,40 m para la nave y 4,70 m para los laterales</td></tr>
 <tr><td>Colocación</td><td>En el sentido de la caída del agua, de cumbrera a alero</td></tr>
-<tr><td>Peso</td><td>10,2 kg/m²</td></tr>
+<tr><td>Peso</td><td>Unos 10 kg/m²</td></tr>
 </table></div>
 
 <h3>Cantidad de paneles</h3>
 <div class="tw"><table>
-<tr><th>Sector</th><th class="n">Paneles</th><th>Detalle</th></tr>
-<tr><td>Nave principal</td><td class="n">48</td><td>24 por faldón, de 1,00 × 4,30 m más el vuelo de alero</td></tr>
-<tr><td>Faldón lateral grande</td><td class="n">22</td><td>Del lado del lavadero</td></tr>
-<tr><td>Faldón lateral chico</td><td class="n">18</td><td>Del lado opuesto</td></tr>
-<tr class="tot"><td>Total</td><td class="n">88</td><td></td></tr>
+<tr><th>Sector</th><th class="n">Paneles</th><th class="n">Largo</th><th class="n">Superficie</th></tr>
+<tr><td>Nave principal, 24 por faldón</td><td class="n">48</td><td class="n">4,40 m</td><td class="n">211 m²</td></tr>
+<tr><td>Faldón lateral grande</td><td class="n">22</td><td class="n">4,70 m</td><td class="n">103 m²</td></tr>
+<tr><td>Faldón lateral chico</td><td class="n">18</td><td class="n">4,70 m</td><td class="n">85 m²</td></tr>
+<tr class="tot"><td>Total</td><td class="n">88</td><td class="n"></td><td class="n">399 m²</td></tr>
 </table></div>
 
-<h3>Complementos de la nave</h3>
+<h3>Cotización</h3>
+<p><a href="docs/cotizacion-panel-techo-30mm.pdf" download style="display:inline-block;background:#1C2730;color:#fff;text-decoration:none;padding:11px 18px;font-weight:500">Descargar la cotización en PDF</a></p>
 <div class="tw"><table>
-<tr><th>Ítem</th><th class="n">Cantidad</th><th>Detalle</th></tr>
-<tr><td>Cumbrera</td><td class="n">23,9 m</td><td>Cumbrera metálica con sellado, a lo largo de toda la nave</td></tr>
-<tr><td>Correas</td><td class="n">7 líneas</td><td>3 por faldón y la cumbrera, de cercha a cercha; en el alero apoya en el encadenado</td></tr>
-<tr><td>Machimbre</td><td class="n">205 m²</td><td>Entre cercha y cercha, fijado por debajo de las correas</td></tr>
+<tr><th>Rubro</th><th>Detalle</th><th class="n">USD</th></tr>
+<tr><td>Paneles</td><td>435,6 m² a USD 47 el m²; se factura el largo entero de 4,95 m</td><td class="n">20.473,20</td></tr>
+<tr><td>Perfilería</td><td>25 cumbreras de 1,10 m y 42,4 m de babeta</td><td class="n">1.037,87</td></tr>
+<tr><td>Fijaciones</td><td>300 tornillos de 4" con caballete y 1.280 tornillos de perfilería</td><td class="n">341,98</td></tr>
+<tr><td>Selladores</td><td>4 rollos de membrana autoadhesiva y 12 espumas de poliuretano</td><td class="n">130,84</td></tr>
+<tr><td>Flete</td><td>Entrega en obra, El Milagro, José Ignacio</td><td class="n">506,00</td></tr>
+<tr class="pick"><td>Subtotal sin IVA</td><td></td><td class="n">22.489,89</td></tr>
+<tr><td>IVA 22 %</td><td></td><td class="n">4.947,78</td></tr>
+<tr class="tot"><td>Total</td><td></td><td class="n">27.437,67</td></tr>
 </table></div>
 
+<div class="tw"><table>
+<tr><th>Condición</th><th>Detalle</th></tr>
+<tr><td>Proveedor</td><td>BMC Uruguay, cotización HIA-30-20261011 del 11/10/2026</td></tr>
+<tr><td>Validez</td><td>10 días</td></tr>
+<tr><td>Pago</td><td>100 % por adelantado, para generar los cortes</td></tr>
+<tr><td>Entrega</td><td>Hasta 10 días después del pago</td></tr>
+<tr><td>No incluye</td><td>Montaje ni descarga; para descargar hacen falta 2 peones como mínimo</td></tr>
+</table></div>
+
+<div class="callout"><p><b>Fijaciones a revisar con el proveedor.</b> La cotización trae 300 tornillos para 88 paneles, unos 3 por panel. Con cinco líneas de apoyo por faldón y el viento de la zona, cada tornillo quedaría con unos 280 kg de arrancamiento mayorado; con dos tornillos por panel en cada línea harían falta cerca de 880.</p></div>
 <h3>Capas, de abajo hacia arriba</h3>
 <div class="tw"><table>
 <tr><th>Capa</th><th>Se ve desde abajo</th><th>Función</th><th class="n">kg/m²</th></tr>
@@ -305,12 +333,12 @@ a{color:var(--steel)}
 <tr><td>2 · Machimbre de pino ¾"</td><td>Sí</td><td>Cielorraso; va entre cerchas, fijado por debajo de las correas</td><td class="n">10,0</td></tr>
 <tr><td>3 · Correas de caño 100 × 50 × 2, cada 1,07 m</td><td>No</td><td>Atornilladas arriba de la cercha; llevan el techo de cercha a cercha</td><td class="n">4,2</td></tr>
 <tr><td>4 · Flejes en cruz de San Andrés</td><td>No</td><td>Arriostran el plano del techo, sobre las correas</td><td class="n">0,3</td></tr>
-<tr><td>5 · Isoroof 30 mm</td><td>No</td><td>Cubierta y aislación, fijada a las correas</td><td class="n">10,2</td></tr>
+<tr><td>5 · Panel de techo de 30 mm</td><td>No</td><td>Cubierta y aislación, fijada a las correas</td><td class="n">10,2</td></tr>
 <tr><td>Fijaciones y babetas</td><td></td><td></td><td class="n">1,0</td></tr>
 <tr class="tot"><td>Total cubierta</td><td></td><td></td><td class="n">≈ 26</td></tr>
 </table></div>
 
-<p>Desde abajo sólo se ven la cercha y el machimbre. El caño de las correas queda escondido entre el machimbre y el Isoroof.</p>
+<p>Desde abajo sólo se ven la cercha y el machimbre. El caño de las correas queda escondido entre el machimbre y el panel.</p>
 <div class="callout"><p><b>Correas.</b> Entre cercha y cercha hay 3,37 m: un caño 40 × 40 × 2 no alcanza para esa luz. Con caño 100 × 50 × 2 de canto cada 1,07 m, atornillado a la cara superior de la cercha, la correa trabaja al 81 % con la succión del viento y flecha 8 mm con carga de uso.</p></div>
 </section>
 
@@ -333,7 +361,7 @@ a{color:var(--steel)}
 <figcaption>Sobre el plano de obra de la Arq. Carolina Mannise, lámina L1. Las líneas finas que cruzan la nave son los ejes de cercha.</figcaption></figure>
 <div class="tw"><table>
 <tr><th>Cruces</th><th class="n">Cant.</th><th>Ubicación</th><th>Fleje galvanizado</th><th class="n">Uso</th></tr>
-<tr><td>Techo</td><td class="n">14</td><td>Una por faldón en cada uno de los 7 paños, sobre las correas y bajo el Isoroof</td><td>100 × 1,25 mm</td><td class="n">68 %</td></tr>
+<tr><td>Techo</td><td class="n">14</td><td>Una por faldón en cada uno de los 7 paños, sobre las correas y bajo el panel</td><td>100 × 1,25 mm</td><td class="n">68 %</td></tr>
 <tr><td>Transversal</td><td class="n">4</td><td>Muros entre dormitorio y baño</td><td>Doble, 150 × 1,25 mm</td><td class="n">32 %</td></tr>
 <tr><td>Transversal</td><td class="n">1</td><td>Muro entre dormitorio 7 y lavadero</td><td>Doble, 150 × 1,25 mm</td><td class="n">86 %</td></tr>
 <tr><td>Longitudinal</td><td class="n">4</td><td>Muros largos del estar</td><td>100 × 1,25 mm</td><td class="n">64 %</td></tr>
