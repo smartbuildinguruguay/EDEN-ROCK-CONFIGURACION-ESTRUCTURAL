@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eden Rock · Estudio estructural del techo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#1C2730;--soft:#4B5661;--line:#D5DADE;--band:#F2F4F5;--wood:#A3481F;--steel:#2B5C7E;--bg:#FFFFFF}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.top{padding:36px 0 20px}
+.eyebrow{font-family:'IBM Plex Mono','Courier New',monospace;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--wood);margin:0 0 10px}
+h1{font-weight:300;font-size:clamp(30px,5vw,50px);line-height:1.08;margin:0 0 10px;text-wrap:balance}
+.meta{font-family:'IBM Plex Mono','Courier New',monospace;font-size:13px;color:var(--soft);margin:0}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ink)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{appearance:none;border:0;background:none;font:inherit;font-size:15px;font-weight:500;color:var(--soft);padding:14px 14px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--wood)}
+nav.tabs button:focus-visible{outline:2px solid var(--steel);outline-offset:-2px}
+section.panel{display:none;padding:34px 0 70px;scroll-margin-top:56px}
+section.panel.on{display:block}
+.who{display:inline-block;font-family:'IBM Plex Mono','Courier New',monospace;font-size:12.5px;letter-spacing:.06em;color:var(--steel);border:1px solid var(--steel);padding:3px 9px;margin:0 0 14px}
+h2{font-weight:400;font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin:0 0 8px;text-wrap:balance}
+h3{font-weight:600;font-size:19px;margin:38px 0 10px}
+p{margin:0 0 14px;max-width:72ch}
+.lead{font-size:19px;color:var(--soft);max-width:68ch}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:22px 0}
+.stat{border-top:2px solid var(--ink);padding-top:12px}
+.stat b{display:block;font-weight:300;font-size:38px;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat.w b{color:var(--wood)}.stat.s b{color:var(--steel)}
+.stat span{display:block;font-size:14.5px;color:var(--soft);margin-top:6px}
+.tw{overflow-x:auto;margin:14px 0 8px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--band);font-weight:600;font-size:13.5px}
+td.n,th.n{text-align:right;white-space:nowrap}
+table.k td:first-child{white-space:nowrap}
+tr.tot td{background:var(--ink);color:#fff;font-weight:500}
+tr.pick td{background:#F6EEE8;font-weight:500}
+.note{font-size:14px;color:var(--soft);max-width:80ch}
+.callout{border-left:4px solid var(--wood);background:#FBF6F2;padding:14px 18px;margin:20px 0;max-width:80ch}
+.callout.s{border-color:var(--steel);background:#F2F6F9}
+.callout p:last-child{margin:0}
+figure{margin:22px 0}
+figure img,figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);background:#fff}
+figcaption{font-size:13.5px;color:var(--soft);margin-top:8px;max-width:90ch}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14.5px;margin:10px 0 0;padding:0;list-style:none}
+.legend i{display:inline-block;width:22px;height:8px;vertical-align:middle;margin-right:7px}
+ul.plain{padding-left:20px;max-width:76ch;margin:0 0 14px}
+ul.plain li{margin-bottom:6px}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:13.5px;color:var(--soft)}
+a{color:var(--steel)}
+@media print{nav.tabs{display:none}section.panel{display:block;page-break-after:always;padding:10px 0}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Smart Building Uruguay · Casa Eden Rock</p>
+<h1>Estudio estructural del techo</h1>
+<p class="meta">Padrón 27868 · Ruta 10, km 172,500 · Maldonado · Octubre 2026 · Predimensionado</p>
+</div></header>
+
+<nav class="tabs" aria-label="Partes del estudio"><div class="wrap" role="tablist">
+<button role="tab" data-t="resumen">Resumen</button>
+<button role="tab" data-t="cercha">Cercha</button>
+<button role="tab" data-t="cargas">Cargas, columnas y encadenado</button>
+<button role="tab" data-t="cruces">Viento y cruces</button>
+<button role="tab" data-t="anclajes">Anclajes</button>
+</div></nav>
+
+<main class="wrap">
+
+<section class="panel" id="resumen">
+<h2>Columnas y encadenado en caño 100 × 100 × 3,2 mm</h2>
+<p class="lead">Nave central de cerchas de lapacho 20 × 20 con 8,05 m de luz, sobre columnas de caño de 3,00 m, con cubierta de Isoroof 30 mm sobre machimbre.</p>
+<div class="grid">
+<div class="stat w"><b>950 kg</b><span>pesa cada cercha de lapacho</span></div>
+<div class="stat"><b>2,1 t</b><span>recibe cada columna en servicio</span></div>
+<div class="stat s"><b>3,2 mm</b><span>espesor de pared para columnas y encadenado, en 100 × 100</span></div>
+<div class="stat"><b>13 cruces</b><span>de San Andrés en muros, más el plano del techo</span></div>
+</div>
+<div class="tw"><table>
+<tr><th>Tema</th><th>Resultado</th></tr>
+<tr><td>Cercha</td><td>950 kg cada una; pesa más que el techo que sostiene</td></tr>
+<tr><td>Columnas</td><td>Caño 100 × 100 × 3,2 mm; el de 2 mm se descarta</td></tr>
+<tr><td>Encadenado superior</td><td>Caño 100 × 100 × 3,2 mm, el mismo de las columnas</td></tr>
+<tr><td>Acero</td><td>ASTM A500 Grado B, galvanizado o con epoxi por la cercanía al mar</td></tr>
+<tr><td>Arriostramiento</td><td>5 cruces transversales, 8 longitudinales y cruces en el techo</td></tr>
+<tr><td>Anclajes</td><td>Cada apoyo se ancla para 0,9 t de tracción por viento</td></tr>
+</table></div>
+</section>
+
+<section class="panel" id="cercha">
+<h2>Cada cercha pesa 950 kg</h2>
+<figure><svg viewBox="0 0 1400 420" role="img" aria-label="Alzado de la cercha con cotas">
+<polygon points="100,330 1300,330 1300,286.6 700,69 100,286.6" fill="#C98A5B" stroke="#1C2730" stroke-width="2.5"/>
+<polygon points="149.9,300.2 685.1,300.2 685.1,106.1" fill="#fff" stroke="#1C2730" stroke-width="2.5"/>
+<polygon points="1250.1,300.2 714.9,300.2 714.9,106.1" fill="#fff" stroke="#1C2730" stroke-width="2.5"/>
+<polygon points="685.1,300.2 405.7,207.4 450.9,191 685.1,268.8" fill="#C98A5B" stroke="#1C2730" stroke-width="2.5"/>
+<polygon points="714.9,300.2 994.3,207.4 949.1,191 714.9,268.8" fill="#C98A5B" stroke="#1C2730" stroke-width="2.5"/>
+<rect x="107.5" y="331" width="15" height="42" fill="#2B5C7E"/><rect x="1277.5" y="331" width="15" height="42" fill="#2B5C7E"/>
+<g stroke="#4B5661" stroke-width="1.5" fill="none">
+<line x1="100" y1="398" x2="1300" y2="398"/><line x1="100" y1="388" x2="100" y2="408"/><line x1="1300" y1="388" x2="1300" y2="408"/>
+<line x1="50" y1="69" x2="50" y2="330"/><line x1="40" y1="69" x2="690" y2="69" stroke-dasharray="6 6"/><line x1="40" y1="330" x2="95" y2="330"/>
+<line x1="1350" y1="286.6" x2="1350" y2="330"/><line x1="1305" y1="286.6" x2="1360" y2="286.6"/><line x1="1305" y1="330" x2="1360" y2="330"/>
+<line x1="713.6" y1="31.4" x2="1313.6" y2="249"/><line x1="703" y1="60" x2="717" y2="22"/><line x1="1303" y1="278" x2="1317" y2="240"/>
+</g>
+<g font-family="IBM Plex Mono, Courier New, monospace" font-size="22" fill="#1C2730">
+<rect x="640" y="384" width="120" height="28" fill="#fff"/><text x="700" y="406" text-anchor="middle">8,05 m</text>
+<text x="38" y="200" text-anchor="middle" transform="rotate(-90 38 200)">1,75 m</text>
+<text x="1396" y="358" text-anchor="end">0,29 m</text>
+<text x="1040" y="118">4,28 m</text>
+<text x="250" y="170" fill="#A3481F">19,9° · 36 %</text>
+</g>
+</svg>
+<figcaption>Todas las piezas en lapacho 20 × 20 cm. Apoya en una columna de caño en cada extremo, sin apoyo intermedio.</figcaption>
+</figure>
+<div class="tw"><table>
+<tr><th>Pieza</th><th class="n">Cant.</th><th class="n">Largo (m)</th><th class="n">Total (ml)</th><th class="n">Peso (kg)</th></tr>
+<tr><td>Tirante inferior</td><td class="n">1</td><td class="n">8,05</td><td class="n">8,05</td><td class="n">354</td></tr>
+<tr><td>Pares</td><td class="n">2</td><td class="n">4,28</td><td class="n">8,56</td><td class="n">376</td></tr>
+<tr><td>Pendolón</td><td class="n">1</td><td class="n">1,32</td><td class="n">1,32</td><td class="n">58</td></tr>
+<tr><td>Diagonales</td><td class="n">2</td><td class="n">1,87</td><td class="n">3,74</td><td class="n">164</td></tr>
+<tr class="tot"><td>Total por cercha</td><td></td><td></td><td class="n">21,66</td><td class="n">≈ 950</td></tr>
+</table></div>
+<p class="note">Lapacho a 1.100 kg/m³: 44 kg por metro lineal de pieza 20 × 20.</p>
+<h3>Opciones para alivianarla</h3>
+<div class="tw"><table class="k">
+<tr><th>Sección (ancho × canto)</th><th class="n">Peso por cercha</th><th class="n">Ahorro</th><th>Vista de frente</th></tr>
+<tr><td>20 × 20 cm (actual)</td><td class="n">945 kg</td><td class="n">0 %</td><td>Actual</td></tr>
+<tr><td>15 × 20 cm</td><td class="n">710 kg</td><td class="n">24 %</td><td>Idéntica</td></tr>
+<tr><td>10 × 20 cm</td><td class="n">470 kg</td><td class="n">50 %</td><td>Idéntica</td></tr>
+</table></div>
+<p>La madera trabaja a unos 10 kg/cm², muy por debajo de lo que resiste: la sección 20 × 20 responde a la imagen, no a la carga. Reducir sólo el ancho mantiene los 20 cm en el alzado.</p>
+</section>
+
+<section class="panel" id="cargas">
+<h2>Cada columna recibe 2,1 t y se resuelve con caño de 3,2 mm</h2>
+<h3>1. Carga sobre cada cercha</h3>
+<div class="tw"><table>
+<tr><th>Concepto</th><th class="n">kg por cercha</th></tr>
+<tr><td>Cercha de lapacho 20 × 20</td><td class="n">950</td></tr>
+<tr><td>Herrajes y bulones</td><td class="n">50</td></tr>
+<tr><td>Cubierta: Isoroof 30 mm, machimbre y clavaderas (26 kg/m²)</td><td class="n">755</td></tr>
+<tr><td>Sobrecarga de uso y mantenimiento (50 kg/m²)</td><td class="n">1.356</td></tr>
+<tr class="tot"><td>Total por cercha</td><td class="n">3.111</td></tr>
+</table></div>
+<p class="note">Cerchas cada 3,37 m, según el plano de obra.</p>
+<h3>2. Carga sobre cada columna</h3>
+<div class="tw"><table>
+<tr><th>Concepto</th><th class="n">kg por columna</th></tr>
+<tr><td>Media cercha</td><td class="n">500</td></tr>
+<tr><td>Media cubierta de la nave</td><td class="n">378</td></tr>
+<tr><td>Media sobrecarga de la nave</td><td class="n">678</td></tr>
+<tr><td>Techo del cuerpo lateral que apoya en la misma columna</td><td class="n">577</td></tr>
+<tr class="tot"><td>Total en servicio</td><td class="n">2.133</td></tr>
+<tr class="tot"><td>Total mayorado para el cálculo</td><td class="n">2.976</td></tr>
+</table></div>
+<h3>3. Espesor de las columnas</h3>
+<div class="tw"><table class="k">
+<tr><th>Caño (mm)</th><th class="n">kg/m</th><th class="n">Resiste</th><th class="n">Uso con carga vertical</th><th class="n">Uso con viento</th><th>Resultado</th></tr>
+<tr><td>100 × 100 × 2,0</td><td class="n">6,1</td><td class="n">13,0 t</td><td class="n">23 %</td><td class="n">49 %</td><td>Se descarta: pared esbelta</td></tr>
+<tr><td>100 × 100 × 2,5</td><td class="n">7,6</td><td class="n">16,3 t</td><td class="n">18 %</td><td class="n">29 %</td><td>Verifica, con poco margen</td></tr>
+<tr class="pick"><td>100 × 100 × 3,2</td><td class="n">9,6</td><td class="n">20,6 t</td><td class="n">14 %</td><td class="n">23 %</td><td>Recomendado</td></tr>
+<tr><td>100 × 100 × 4,0</td><td class="n">11,8</td><td class="n">25,4 t</td><td class="n">12 %</td><td class="n">19 %</td><td>Sobrado</td></tr>
+</table></div>
+<p>El peso no es el problema: hasta el caño de 2 mm lo soporta. El de 2 mm se descarta porque su pared abolla antes de agotar el acero, no deja reserva frente al viento y es delicado de soldar.</p>
+<h3>4. Espesor del encadenado superior</h3>
+<div class="tw"><table class="k">
+<tr><th>Caño (mm)</th><th class="n">kg/m</th><th class="n">Uso</th><th class="n">Flecha lateral</th><th>Resultado</th></tr>
+<tr><td>100 × 100 × 2,0</td><td class="n">6,1</td><td class="n">114 %</td><td class="n">8 mm</td><td>No verifica</td></tr>
+<tr><td>100 × 100 × 2,5</td><td class="n">7,6</td><td class="n">80 %</td><td class="n">7 mm</td><td>Verifica, con poco margen</td></tr>
+<tr class="pick"><td>100 × 100 × 3,2</td><td class="n">9,6</td><td class="n">64 %</td><td class="n">5 mm</td><td>Recomendado</td></tr>
+</table></div>
+<p>El peso de la cercha no pasa por el encadenado: baja directo a la columna. El encadenado ata las cabezas de columna y recibe el viento del muro, unos 195 kg por metro, en vanos de 3 m.</p>
+<div class="callout s"><p><b>Condición:</b> cada cercha y cada tirante de los cuerpos laterales apoya sobre una columna, nunca a mitad de vano del encadenado.</p></div>
+<h3>Especificación</h3>
+<div class="tw"><table>
+<tr><th>Ítem</th><th>Especificación</th></tr>
+<tr><td>Columnas y encadenado</td><td>Caño cuadrado 100 × 100 × 3,2 mm</td></tr>
+<tr><td>Acero</td><td>ASTM A500 Grado B, con certificado</td></tr>
+<tr><td>Apoyo de la cercha</td><td>Placa de asiento 200 × 200 × 8 mm con horquilla y bulones pasantes</td></tr>
+<tr><td>Protección</td><td>Galvanizado en caliente o epoxi más poliuretano, con extremos tapados</td></tr>
+</table></div>
+</section>
+
+<section class="panel" id="cruces">
+<h2>El empuje del viento baja por los cuerpos de dormitorios</h2>
+<div class="grid">
+<div class="stat"><b>158 km/h</b><span>viento de norma en la faja costera (118 kg/m²)</span></div>
+<div class="stat"><b>10,9 t</b><span>empuje transversal sobre la casa</span></div>
+<div class="stat"><b>6,5 t</b><span>empuje longitudinal</span></div>
+</div>
+<p>Los dos frentes del estar son vidriados y la galería y el parrillero son abiertos: en la nave no hay muros transversales. El techo lleva el empuje hasta los muros ciegos de los dormitorios.</p>
+<figure><img src="img/planta-cruces.png" alt="Plano de obra con las cruces propuestas marcadas sobre los muros y el plano del techo">
+<ul class="legend">
+<li><i style="background:#A3481F"></i>Cruz transversal</li>
+<li><i style="background:repeating-linear-gradient(90deg,#A3481F 0 5px,#fff 5px 9px)"></i>Paño angosto con placa estructural</li>
+<li><i style="background:#2B5C7E"></i>Cruz longitudinal</li>
+<li><i style="background:#DCE4EA;border:1px solid #2B5C7E;height:12px"></i>Cruces en el plano del techo</li>
+</ul>
+<figcaption>Sobre el plano de obra de la Arq. Carolina Mannise, lámina L1.</figcaption></figure>
+<div class="tw"><table>
+<tr><th>Tipo</th><th class="n">Cant.</th><th>Ubicación</th><th>Elemento</th></tr>
+<tr><td>Transversal</td><td class="n">5</td><td>Muros entre dormitorio y baño; muro entre dormitorio 7 y lavadero</td><td>Planchuela 2" × 1/4"</td></tr>
+<tr><td>Longitudinal</td><td class="n">8</td><td>Muros largos del estar y esquinas exteriores de los dormitorios</td><td>Planchuela 2" × 3/16"</td></tr>
+<tr><td>Techo</td><td class="n">7 paños</td><td>Entre todas las cerchas, en cada faldón, incluidos galería y parrillero</td><td>Planchuela 2" × 3/16" o tensor Ø16</td></tr>
+<tr><td>Paños angostos</td><td class="n">12</td><td>A cada lado de ventanas, vidrios fijos y corrediza</td><td>Placa estructural atornillada</td></tr>
+</table></div>
+</section>
+
+<section class="panel" id="anclajes">
+<h2>Los apoyos se anclan para tracción, no sólo para peso</h2>
+<div class="grid">
+<div class="stat"><b>2,1 t</b><span>compresión por columna en servicio</span></div>
+<div class="stat w"><b>0,9 t</b><span>tracción por apoyo de cercha, por succión del viento</span></div>
+<div class="stat w"><b>2,4 t</b><span>tracción en la columna de cada cruz transversal</span></div>
+</div>
+<p>El viento succiona el techo con unas 3,3 t por cercha y el peso sólo retiene 1,5 t. La diferencia tira de cada apoyo hacia arriba.</p>
+<div class="tw"><table>
+<tr><th>Unión</th><th>Solución</th></tr>
+<tr><td>Cercha a columna</td><td>Placa de asiento con horquilla y bulones pasantes</td></tr>
+<tr><td>Columna a dado</td><td>Placa base con cuatro anclajes</td></tr>
+<tr><td>Dado</td><td>Peso propio mayor que la tracción, o ligado a la viga de riostra</td></tr>
+</table></div>
+</section>
+
+</main>
+<footer><div class="wrap">Smart Building Uruguay · Dirección de obra: Ramiro Portugau · Predimensionado para presentación; el cálculo definitivo lo firma el ingeniero.</div></footer>
+<script>
+(function(){
+var btns=[].slice.call(document.querySelectorAll('nav.tabs button')),panels=[].slice.call(document.querySelectorAll('section.panel'));
+function show(id,push){var ok=panels.some(function(p){return p.id===id});if(!ok)id='resumen';
+panels.forEach(function(p){p.classList.toggle('on',p.id===id)});
+btns.forEach(function(b){var s=b.dataset.t===id;b.setAttribute('aria-selected',s);if(s){var c=b.parentNode;c.scrollLeft=Math.max(0,b.offsetLeft-c.offsetLeft-20)}});
+if(push){try{history.replaceState(null,'','#'+id)}catch(e){}window.scrollTo(0,0)}}
+btns.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.t,true)})});
+window.addEventListener('hashchange',function(){show(location.hash.slice(1))});
+show(location.hash.slice(1)||'resumen');
+})();
+</script>
+</body>
+</html>
