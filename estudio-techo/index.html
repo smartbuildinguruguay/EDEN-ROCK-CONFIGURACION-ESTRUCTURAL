@@ -57,6 +57,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:13.5px;col
 a{color:var(--steel)}
 @media print{nav.tabs{display:none}section.panel{display:block;page-break-after:always;padding:10px 0}}
 </style>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -71,6 +72,7 @@ a{color:var(--steel)}
 <button role="tab" data-t="cargas">Cargas, columnas y encadenado</button>
 <button role="tab" data-t="techo">Techo y cotización</button>
 <button role="tab" data-t="cruces">Viento y cruces</button>
+<button role="tab" data-t="steel">Steel framing</button>
 <button role="tab" data-t="anclajes">Anclajes</button>
 </div></nav>
 <main class="wrap">
@@ -381,6 +383,154 @@ a{color:var(--steel)}
 </table></div>
 
 <div class="callout s"><p><b>Cordones.</b> Para que cada faldón trabaje como viga hacen falta dos piezas continuas en los 23,9 m: la cumbrera y el encadenado de alero.</p></div>
+</section>
+
+<section class="panel" id="steel">
+<h2>Steel framing: 102 paneles en dos juegos, unas 4,7 t de perfiles</h2>
+<div class="grid">
+<div class="stat"><b>102</b><span>paneles: 47 en el juego Wall1 a Wall47 y 55 en el juego Wall57 a Wall112</span></div>
+<div class="stat"><b>4,7 t</b><span>de perfiles galvanizados entre los dos juegos</span></div>
+<div class="stat s"><b>C 100 × 40</b><span>montantes de 0,95 mm y soleras U 102 × 35 de 0,95 mm</span></div>
+<div class="stat"><b>2.790</b><span>tornillos en el juego de 47 paneles</span></div>
+</div>
+<figure><img src="img/steel-framing.png" alt="Perspectiva del modelo con los paneles de steel framing, las cerchas de la nave y el encadenado sobre la platea">
+<figcaption>Modelo de estructura con los paneles de steel framing, las cerchas y el encadenado.</figcaption></figure>
+<h3>Modelo 3D</h3>
+<model-viewer src="docs/estructura-eden-rock.glb" alt="Modelo 3D de la estructura de Eden Rock" camera-controls touch-action="pan-y" shadow-intensity="0.6" exposure="1" style="width:100%;height:520px;background:#F2F4F5;border:1px solid #D5DADE"></model-viewer>
+<p class="note">Arrastrá para girar y usá la rueda o dos dedos para acercar. El archivo pesa 15 MB y puede tardar en cargar.</p>
+<h3>Descargas</h3>
+<p style="display:flex;flex-wrap:wrap;gap:10px">
+<a href="docs/steel-framing-paneles.pdf" download style="display:inline-block;background:#1C2730;color:#fff;text-decoration:none;padding:11px 18px;font-weight:500">Paneles Wall1 a Wall47 (PDF, 47 láminas)</a>
+<a href="docs/steel-framing-lista-de-cortes.pdf" download style="display:inline-block;background:#1C2730;color:#fff;text-decoration:none;padding:11px 18px;font-weight:500">Lista de cortes Wall57 a Wall112 (PDF)</a>
+<a href="docs/estructura-eden-rock.glb" download style="display:inline-block;background:#fff;color:#1C2730;border:1px solid #1C2730;text-decoration:none;padding:10px 18px;font-weight:500">Modelo 3D (GLB, 15 MB)</a>
+</p>
+<h3>Perfiles</h3>
+<div class="tw"><table>
+<tr><th>Perfil</th><th>Uso</th><th class="n">Juego Wall1–47</th><th class="n">Juego Wall57–112</th><th class="n">Total</th></tr>
+<tr><td>C 100 × 40 × 0,95</td><td>Montantes, kings, jacks y cripples</td><td class="n">1.157 m</td><td class="n">1.024 m</td><td class="n">2.181 m</td></tr>
+<tr><td>U 102 × 35 × 0,95</td><td>Soleras y dinteles</td><td class="n">325 m</td><td class="n">342 m</td><td class="n">667 m</td></tr>
+<tr><td>C 150 × 40 × 1,60</td><td>Vigas de dintel</td><td class="n">—</td><td class="n">51 m</td><td class="n">51 m</td></tr>
+<tr class="tot"><td>Peso</td><td></td><td class="n">2.556 kg</td><td class="n">2.106 kg</td><td class="n">4.662 kg</td></tr>
+</table></div>
+
+<p class="note">Los paneles Wall1 a Wall47 vienen con altura de montante de 2,84 m y sin vigas de dintel. Los Wall57 a Wall112 tienen montantes de 2,51 a 2,98 m y 20 aberturas con dintel de C 150 × 40 × 1,60.</p>
+<h3>Arriostramiento</h3>
+<div class="callout s"><p><b>Las cruces de San Andrés no están en las listas.</b> Ninguno de los dos juegos trae flejes. Hay que sumar las 13 cruces de muro y las 14 de techo de la pestaña Viento y cruces: fleje galvanizado de 100 y 150 × 1,25 mm, con cartelas y tornillos.</p></div>
+<h3>Panel por panel</h3>
+<details><summary style="cursor:pointer;font-weight:600;padding:8px 0">Juego Wall1 a Wall47 · 2.556 kg</summary>
+<div class="tw"><table>
+<tr><th>Panel</th><th class="n">Peso (kg)</th><th class="n">Tornillos</th></tr>
+<tr><td>Wall1</td><td class="n">41,1</td><td class="n">32</td></tr>
+<tr><td>Wall2</td><td class="n">19,9</td><td class="n">16</td></tr>
+<tr><td>Wall3</td><td class="n">25,4</td><td class="n">20</td></tr>
+<tr><td>Wall4</td><td class="n">50,9</td><td class="n">40</td></tr>
+<tr><td>Wall5</td><td class="n">67,2</td><td class="n">66</td></tr>
+<tr><td>Wall6</td><td class="n">45,8</td><td class="n">36</td></tr>
+<tr><td>Wall7</td><td class="n">45,8</td><td class="n">36</td></tr>
+<tr><td>Wall8</td><td class="n">24,6</td><td class="n">20</td></tr>
+<tr><td>Wall9</td><td class="n">19,8</td><td class="n">16</td></tr>
+<tr><td>Wall10</td><td class="n">45,8</td><td class="n">36</td></tr>
+<tr><td>Wall11</td><td class="n">29,8</td><td class="n">24</td></tr>
+<tr><td>Wall12</td><td class="n">50,9</td><td class="n">40</td></tr>
+<tr><td>Wall13</td><td class="n">75,1</td><td class="n">72</td></tr>
+<tr><td>Wall14</td><td class="n">45,8</td><td class="n">36</td></tr>
+<tr><td>Wall15</td><td class="n">97,3</td><td class="n">104</td></tr>
+<tr><td>Wall16</td><td class="n">96,8</td><td class="n">100</td></tr>
+<tr><td>Wall17</td><td class="n">96,8</td><td class="n">100</td></tr>
+<tr><td>Wall18</td><td class="n">96,8</td><td class="n">100</td></tr>
+<tr><td>Wall19</td><td class="n">117,7</td><td class="n">144</td></tr>
+<tr><td>Wall20</td><td class="n">116,3</td><td class="n">144</td></tr>
+<tr><td>Wall21</td><td class="n">116,1</td><td class="n">144</td></tr>
+<tr><td>Wall22</td><td class="n">43,6</td><td class="n">36</td></tr>
+<tr><td>Wall23</td><td class="n">81,9</td><td class="n">100</td></tr>
+<tr><td>Wall24</td><td class="n">43,6</td><td class="n">36</td></tr>
+<tr><td>Wall25</td><td class="n">33,8</td><td class="n">28</td></tr>
+<tr><td>Wall26</td><td class="n">73,5</td><td class="n">100</td></tr>
+<tr><td>Wall27</td><td class="n">77,5</td><td class="n">104</td></tr>
+<tr><td>Wall28</td><td class="n">44,7</td><td class="n">36</td></tr>
+<tr><td>Wall29</td><td class="n">43,6</td><td class="n">36</td></tr>
+<tr><td>Wall30</td><td class="n">33,9</td><td class="n">28</td></tr>
+<tr><td>Wall31</td><td class="n">77,8</td><td class="n">104</td></tr>
+<tr><td>Wall32</td><td class="n">77,8</td><td class="n">104</td></tr>
+<tr><td>Wall33</td><td class="n">58,9</td><td class="n">48</td></tr>
+<tr><td>Wall34</td><td class="n">51,0</td><td class="n">44</td></tr>
+<tr><td>Wall35</td><td class="n">65,0</td><td class="n">72</td></tr>
+<tr><td>Wall36</td><td class="n">55,8</td><td class="n">60</td></tr>
+<tr><td>Wall37</td><td class="n">122,0</td><td class="n">136</td></tr>
+<tr><td>Wall38</td><td class="n">25,0</td><td class="n">80</td></tr>
+<tr><td>Wall39</td><td class="n">14,4</td><td class="n">12</td></tr>
+<tr><td>Wall40</td><td class="n">18,8</td><td class="n">16</td></tr>
+<tr><td>Wall41</td><td class="n">14,4</td><td class="n">12</td></tr>
+<tr><td>Wall42</td><td class="n">18,8</td><td class="n">16</td></tr>
+<tr><td>Wall43</td><td class="n">25,0</td><td class="n">80</td></tr>
+<tr><td>Wall44</td><td class="n">29,6</td><td class="n">40</td></tr>
+<tr><td>Wall45</td><td class="n">29,6</td><td class="n">40</td></tr>
+<tr><td>Wall46</td><td class="n">34,9</td><td class="n">48</td></tr>
+<tr><td>Wall47</td><td class="n">34,9</td><td class="n">48</td></tr>
+</table></div>
+
+</details>
+<details><summary style="cursor:pointer;font-weight:600;padding:8px 0">Juego Wall57 a Wall112 · 2.106 kg</summary>
+<div class="tw"><table>
+<tr><th>Panel</th><th class="n">Peso (kg)</th><th class="n">Piezas</th><th class="n">Montante más alto</th><th>Dintel</th></tr>
+<tr><td>Wall112</td><td class="n">68,2</td><td class="n">30</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall90</td><td class="n">58,6</td><td class="n">28</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall89</td><td class="n">52,0</td><td class="n">12</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall94</td><td class="n">25,6</td><td class="n">7</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall108</td><td class="n">7,7</td><td class="n">8</td><td class="n">0,34 m</td><td></td></tr>
+<tr><td>Wall110</td><td class="n">20,0</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall82</td><td class="n">52,0</td><td class="n">12</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall77</td><td class="n">64,4</td><td class="n">29</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall101</td><td class="n">92,9</td><td class="n">37</td><td class="n">3,06 m</td><td>Sí</td></tr>
+<tr><td>Wall60</td><td class="n">20,0</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall84</td><td class="n">22,2</td><td class="n">7</td><td class="n">2,51 m</td><td></td></tr>
+<tr><td>Wall98</td><td class="n">25,6</td><td class="n">7</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall107</td><td class="n">92,8</td><td class="n">37</td><td class="n">3,05 m</td><td>Sí</td></tr>
+<tr><td>Wall76</td><td class="n">59,5</td><td class="n">30</td><td class="n">—</td><td>Sí</td></tr>
+<tr><td>Wall70</td><td class="n">36,5</td><td class="n">9</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall74</td><td class="n">17,3</td><td class="n">6</td><td class="n">2,47 m</td><td></td></tr>
+<tr><td>Wall104</td><td class="n">17,3</td><td class="n">6</td><td class="n">2,47 m</td><td></td></tr>
+<tr><td>Wall87</td><td class="n">5,6</td><td class="n">6</td><td class="n">0,65 m</td><td></td></tr>
+<tr><td>Wall57</td><td class="n">17,4</td><td class="n">6</td><td class="n">2,47 m</td><td></td></tr>
+<tr><td>Wall97</td><td class="n">17,3</td><td class="n">6</td><td class="n">2,47 m</td><td></td></tr>
+<tr><td>Wall102</td><td class="n">5,6</td><td class="n">6</td><td class="n">0,65 m</td><td></td></tr>
+<tr><td>Wall71</td><td class="n">39,9</td><td class="n">10</td><td class="n">2,93 m</td><td></td></tr>
+<tr><td>Wall69</td><td class="n">39,6</td><td class="n">10</td><td class="n">2,92 m</td><td></td></tr>
+<tr><td>Wall63</td><td class="n">39,6</td><td class="n">10</td><td class="n">2,92 m</td><td></td></tr>
+<tr><td>Wall65</td><td class="n">63,6</td><td class="n">32</td><td class="n">2,93 m</td><td>Sí</td></tr>
+<tr><td>Wall83</td><td class="n">5,6</td><td class="n">6</td><td class="n">0,65 m</td><td></td></tr>
+<tr><td>Wall91</td><td class="n">54,6</td><td class="n">27</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall68</td><td class="n">39,9</td><td class="n">10</td><td class="n">2,93 m</td><td></td></tr>
+<tr><td>Wall59</td><td class="n">36,1</td><td class="n">9</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall64</td><td class="n">20,3</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall61</td><td class="n">7,2</td><td class="n">8</td><td class="n">0,26 m</td><td></td></tr>
+<tr><td>Wall109</td><td class="n">92,9</td><td class="n">37</td><td class="n">3,05 m</td><td>Sí</td></tr>
+<tr><td>Wall105</td><td class="n">78,6</td><td class="n">46</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall111</td><td class="n">8,9</td><td class="n">9</td><td class="n">0,34 m</td><td></td></tr>
+<tr><td>Wall75</td><td class="n">20,0</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall58</td><td class="n">20,5</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall85</td><td class="n">5,8</td><td class="n">6</td><td class="n">0,67 m</td><td></td></tr>
+<tr><td>Wall72</td><td class="n">20,2</td><td class="n">6</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall99</td><td class="n">57,1</td><td class="n">28</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall88</td><td class="n">69,3</td><td class="n">32</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall67</td><td class="n">36,6</td><td class="n">9</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall62</td><td class="n">39,9</td><td class="n">10</td><td class="n">2,93 m</td><td></td></tr>
+<tr><td>Wall100</td><td class="n">47,8</td><td class="n">26</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall96</td><td class="n">21,2</td><td class="n">6</td><td class="n">3,15 m</td><td></td></tr>
+<tr><td>Wall73</td><td class="n">39,9</td><td class="n">10</td><td class="n">2,93 m</td><td></td></tr>
+<tr><td>Wall79</td><td class="n">88,1</td><td class="n">36</td><td class="n">3,04 m</td><td>Sí</td></tr>
+<tr><td>Wall66</td><td class="n">14,6</td><td class="n">5</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall86</td><td class="n">8,8</td><td class="n">9</td><td class="n">0,34 m</td><td></td></tr>
+<tr><td>Wall81</td><td class="n">46,2</td><td class="n">20</td><td class="n">2,47 m</td><td></td></tr>
+<tr><td>Wall106</td><td class="n">55,0</td><td class="n">27</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall93</td><td class="n">25,8</td><td class="n">7</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall80</td><td class="n">58,5</td><td class="n">28</td><td class="n">2,51 m</td><td>Sí</td></tr>
+<tr><td>Wall92</td><td class="n">25,8</td><td class="n">7</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall95</td><td class="n">52,0</td><td class="n">12</td><td class="n">2,91 m</td><td></td></tr>
+<tr><td>Wall78</td><td class="n">48,3</td><td class="n">26</td><td class="n">2,51 m</td><td>Sí</td></tr>
+</table></div>
+
+</details>
 </section>
 
 <section class="panel" id="anclajes">
